@@ -1,0 +1,131 @@
+<div class="container mt-5" *ngIf="flagListagem">
+  <h2>Eventos</h2>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary mr-2" (click)="adicionarEvento()">Adicionar Evento</button>
+    <button class="btn btn-danger" (click)="sair()">Sair</button>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Descrição</th>
+        <th scope="col">Início</th>
+        <th scope="col">Fim</th>
+        <th scope="col">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let evento of eventos">
+        <td>{{ evento.evt_desc }}</td>
+        <td>{{ evento.evt_start | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ evento.evt_end | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>
+          <button type="button" (click)="alterarEvento(evento.evt_id)"  class="btn btn-info btn-sm mr-2"> Alterar</button>
+          <button type="button"  (click)="inviteForm(evento.evt_id)" class="btn btn-success  btn-sm mr-2"> Convidar </button>
+          <button type="button" (click)="excluirEvento(evento.evt_id)" class="btn btn-danger btn-sm"> Excluir </button>
+        </td>
+      </tr>
+      <tr *ngFor="let eventoConfirmado of eventosConfirmados">
+        <td>{{ eventoConfirmado.evt_desc }}</td>
+        <td>{{ eventoConfirmado.evt_start | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ eventoConfirmado.evt_end | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="eventosConvidados && eventosConvidados.length > 0">
+    <h2>Novos Convites</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Descrição</th>
+          <th scope="col">Início</th>
+          <th scope="col">Fim</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let convites of eventosConvidados">
+          <td>{{ convites.evt_desc }}</td>
+          <td>{{ convites.evt_start | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ convites.evt_end | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <button type="button"  (click)="aceitarConvite(convites.id)" class="btn btn-success  btn-sm mr-2"> Aceitar </button>
+            <button type="button" (click)="rejeitarConvite(convites.id)" class="btn btn-danger btn-sm"> Recusar </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container mt-5" *ngIf="flagNovoEvento">
+  <h1>Adicionar Novo Evento</h1>
+  <form [formGroup]="meuFormulario" (ngSubmit)="onSubmit()">
+    <input type="hidden" class="form-control" formControlName="evt_usr"  id="evt_usr" name="evt_usr" >
+    <div class="form-group">
+      <label for="descricao">Descrição:</label>
+      <input type="text" class="form-control" formControlName="evt_desc" id="evt_desc" name="evt_desc" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="horarioInicio">Horário de Início:</label>
+        <input type="datetime-local" class="form-control"  formControlName="evt_start" id="evt_start" name="evt_start" required>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="horarioTermino">Horário de Término:</label>
+        <input type="datetime-local" class="form-control" formControlName="evt_end"  id="evt_end" name="evt_end" required>
+      </div>
+    </div>
+    <button type="button" (click)="fecharForm()"  class="btn btn-secondary mr-2">Voltar</button>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+
+<div class="container mt-5" *ngIf="flagAlterarEvento">
+  <h1>Alterar Evento</h1>
+  <form [formGroup]="meuFormularioAlteracao" (ngSubmit)="onChange()">
+    <input type="hidden" class="form-control" formControlName="evt_usr"  id="evt_usr" name="evt_usr" >
+    <input type="hidden" class="form-control" formControlName="evt_id"  id="evt_id" name="evt_id" >
+    <div class="form-group">
+      <label for="descricao">Descrição:</label>
+      <input type="text" class="form-control" formControlName="evt_desc" id="evt_desc" name="evt_desc" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="horarioInicio">Horário de Início:</label>
+        <input type="datetime-local" class="form-control"  formControlName="evt_start" id="evt_start" name="evt_start" required>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="horarioTermino">Horário de Término:</label>
+        <input type="datetime-local" class="form-control" formControlName="evt_end"  id="evt_end" name="evt_end" required>
+      </div>
+    </div>
+    <button type="button" (click)="fecharForm()"  class="btn btn-secondary mr-2">Voltar</button>
+    <button type="submit" class="btn btn-primary">Alterar</button>
+  </form>
+</div>
+
+<div class="container mt-5" *ngIf="flagconvidarUsuario">
+  <h1>Convidar para Evento</h1>
+  <form [formGroup]="meuFormularioConvidar" (ngSubmit)="onInvite()">
+    <input type="hidden" class="form-control" formControlName="evt_usr"  id="evt_usr" name="evt_usr" >
+    <input type="hidden" class="form-control" formControlName="evt_id"  id="evt_id" name="evt_id" >
+    <div class="form-group">
+      <label for="descricao">Convidado:</label>
+      <select  class="form-control" formControlName="invite_user_id" id="invite_user_id" name="invite_user_id">
+        <option value="">Selecione</option>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.usr_key">{{ usuario.usr_name }}</option>
+      </select>
+    </div>
+
+    <button type="button" (click)="fecharForm()"  class="btn btn-secondary mr-2">Voltar </button>
+    <button type="submit" class="btn btn-primary"> Enviar Convite </button>
+  </form>
+</div>
+

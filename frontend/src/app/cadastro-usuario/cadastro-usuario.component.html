@@ -1,0 +1,30 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Formulário de Cadastro</h3>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="meuFormulario" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <label for="nome">Nome:</label>
+                            <input type="text" class="form-control" formControlName="usr_name" id="usr_name" name="usr_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nickname">Nickname:</label>
+                            <input type="text" class="form-control" formControlName="usr_nickname" id="usr_nickname" name="usr_nickname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Senha:</label>
+                            <input type="password" class="form-control" formControlName="usr_psw" id="usr_psw" name="usr_psw" required>
+                        </div>
+                        <button type="button" routerLink="/" routerLinkActive="router-link-active mr-2"  class="btn btn-primary ">Voltar</button>
+                        <button type="submit"  class="btn btn-secondary">Cadastrar</button>                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
